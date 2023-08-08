@@ -1,0 +1,13 @@
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JS
+
+<h3>LogOut</h3>
+<button @onclick="TryLogOut">LogIn</button>
+@code {
+	void TryLogOut()
+	{
+		UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
+		userStateMaintainer.TryLogoutPlayer();
+		JS.InvokeVoidAsync("alert", "You have been logged out, just close all other tabs with the game and you are safe");
+	}
+}

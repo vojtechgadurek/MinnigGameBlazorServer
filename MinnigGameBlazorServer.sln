@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinnigGameBlazorServer", "MinnigGameBlazorServer\MinnigGameBlazorServer.csproj", "{F1BB929F-8F70-463B-A0FB-0690DA5C5908}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinnigGameBlazorServer", "MinnigGameBlazorServer\MinnigGameBlazorServer.csproj", "{F1BB929F-8F70-463B-A0FB-0690DA5C5908}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameCorpLib", "..\miningcorp\miningcorp\GameCorpLib.csproj", "{4F6BCBF3-D312-4CE9-ABD3-72B450E54516}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F1BB929F-8F70-463B-A0FB-0690DA5C5908}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1BB929F-8F70-463B-A0FB-0690DA5C5908}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1BB929F-8F70-463B-A0FB-0690DA5C5908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F6BCBF3-D312-4CE9-ABD3-72B450E54516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F6BCBF3-D312-4CE9-ABD3-72B450E54516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F6BCBF3-D312-4CE9-ABD3-72B450E54516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F6BCBF3-D312-4CE9-ABD3-72B450E54516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

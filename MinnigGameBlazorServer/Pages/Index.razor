@@ -1,9 +1,48 @@
-﻿@page "/"
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserMaintainer UserMaintainer
+@inject EventAgregator<Player?> eventAgregator
+@page "/"
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<AuthorizeView>
+	<NotAuthorized>
+	<div> Please, log in</div>
+	</NotAuthorized>
 
-Welcome to your new app.
+	<Authorized>
+		@if(Player != null){
+	<div> Welcome, @Player.Name</div>
+	<div> You have @Player.Money $</div>
+		}
+		lol
+		@name
+	</Authorized>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+</AuthorizeView>
+
+@code{
+	public Player? Player = null;
+	public string? name;
+
+	public void OnEvent(Player eventObject)
+	{
+		Player = eventObject;
+		StateHasChanged();
+	}
+
+	protected override void OnInitialized()
+	{
+		eventAgregator.Subscribe((player) => { Player = player; StateHasChanged(); return player; });
+	}
+
+	protected override void OnParametersSet()
+	{
+		name = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
+		if (name is not null)
+		{
+			Player = UserMaintainer.TryGetPlayerByName(name);
+		}
+		StateHasChanged();
+	}
+}

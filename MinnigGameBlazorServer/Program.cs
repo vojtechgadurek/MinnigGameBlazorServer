@@ -1,13 +1,28 @@
+///Sources I used: https://github.com/iso8859/AspNetCoreAuthMultiLang/blob/main/Pages/LoadUserContext.cs
+
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MinnigGameBlazorServer.Data;
+using MinnigGameBlazorServer.Services;
+using GameCorpLib;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
-// Add services to the container.
+// Add services to the container
+builder.Services.AddAuthorizationCore();
+builder.Services.AddOptions();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<IUserMaintainer>(new GameControler());
+builder.Services.AddScoped<AuthenticationStateProvider, UserStateMaintainer>();
+builder.Services.AddScoped<EventAgregator<Player>>();
+
+
 
 var app = builder.Build();
 
@@ -19,12 +34,12 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
 app.UseRouting();
-
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

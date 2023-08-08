@@ -1,0 +1,52 @@
+﻿@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JS
+
+
+<h3>SingIn</h3>
+<div class="form-group">
+    <label>
+        UserName:
+        <input @bind="username" />
+    </label>
+</div>
+<div class="form-group">
+    <label>
+        Password:
+        <input @bind="password" size="50" />
+    </label>
+</div>
+<button @onclick="TryCreateNewUser">Create</button>
+<button @onclick="TryLogIn">LogIn</button>
+@code {
+    //Data for the singin form
+    string username = "";
+    string password = "";
+
+    //Creates instance of the error message component
+    async Task TryCreateNewUser()
+    {
+        UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
+        if (!userStateMaintainer.TryRegisterNewPlayer(username, password))
+        {
+            await JS.InvokeVoidAsync("alert", "Registering failed, username probably taken");
+        }
+        else
+        {
+            navigationManager.NavigateTo("/");
+        }
+    }
+    async Task TryLogIn()
+    {
+        UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
+        if (!userStateMaintainer.TryLoginPlayer(username, password))
+        {
+            await JS.InvokeVoidAsync("alert", "Login failed, wrong user name or password");
+        }
+        else
+        {
+            navigationManager.NavigateTo("/");
+
+        }
+    }
+}
