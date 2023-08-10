@@ -1,18 +1,52 @@
-﻿@page "/Oilfields"
+﻿@inject GameControler GameControler
+@inject EventAgregator<Player?> EventAgregator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserMaintainer UserMaintainer
 
-<PageTitle>Counter</PageTitle>
+@page "/oilfields"
 
-<h1>Counter</h1>
+<AuthorizeView>
+<PageTitle>Oilfield</PageTitle>
+	@if (Player is not null)
+	{
+		@foreach (var oilField in Player.Properties)
+		{
+			<OilFieldComponent OilField="(OilField) oilField.Value"></OilFieldComponent>
+		}
+	}
+	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Click me</button>
+</AuthorizeView>
 
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
     private int currentCount = 0;
 
-    private void IncrementCount()
+	public Player? Player = null;
+
+	public void OnEvent(Player eventObject)
+	{
+		Player = eventObject;
+		StateHasChanged();
+	}
+
+	protected override void OnInitialized()
+	{
+		EventAgregator.Subscribe((player) => { Player = player; StateHasChanged(); return player; });
+	}
+
+	protected override void OnParametersSet()
+	{
+		string? name = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
+		if (name is not null)
+		{
+			Player = UserMaintainer.TryGetPlayerByName(name);
+		}
+		StateHasChanged();
+	}
+
+    private void TryProspectNewOilField()
     {
-        currentCount++;
+		
+        GameControler.TryProspectNewOilField(Player);
     }
 }

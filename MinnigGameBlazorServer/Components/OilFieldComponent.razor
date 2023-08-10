@@ -1,0 +1,21 @@
+﻿
+<h3>OilField</h3>
+<div>Price per unit mined: @OilField.PricePerUnitMined</div>
+<div>Number of rigs: @OilField.NumberOfMiningRings</div>
+<div>Price per rig: @OilField.BasePricePerRigBought</div>
+<button onclick="TryBuyOilRig"></button>
+
+@code {
+	[Parameter]
+	public OilField OilField { get; set; }
+
+	void TryBuyOilRig()
+	{
+		if (OilField.TryBuyMiningRing())
+		{
+			StateHasChanged();
+		}
+	}
+
+	
+}

@@ -12,13 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+GameControler gameControler = new GameControler();
 // Add services to the container
 builder.Services.AddAuthorizationCore();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<IUserMaintainer>(new GameControler());
+builder.Services.AddSingleton<IUserMaintainer>(gameControler);
+builder.Services.AddSingleton<GameControler>(gameControler);
 builder.Services.AddScoped<AuthenticationStateProvider, UserStateMaintainer>();
 builder.Services.AddScoped<EventAgregator<Player>>();
 
