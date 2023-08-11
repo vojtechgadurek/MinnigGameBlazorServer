@@ -9,9 +9,12 @@
 <PageTitle>Oilfield</PageTitle>
 	@if (Player is not null)
 	{
-		@foreach (var oilField in Player.Properties)
+		@foreach (var oilField in Player.Properties.GetEnumerable())
 		{
-			<OilFieldComponent OilField="(OilField) oilField.Value"></OilFieldComponent>
+			if (oilField is OilField)
+			{
+				<OilFieldComponent OilField="(OilField) oilField"></OilFieldComponent>
+			}
 		}
 	}
 	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Click me</button>

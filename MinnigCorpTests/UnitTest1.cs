@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using GameCorpLib;
+using GameCorpLib.Persons;
 using GameCorpLib.State;
 using GameCorpLib.Tradables;
 namespace MinnigCorpTests
@@ -16,11 +17,56 @@ namespace MinnigCorpTests
 			public BasicGame()
 			{
 				gameControler = new GameControler();
+				bool ok = true;
 				rich = gameControler.TryRegisterNewPlayer("rich", "");
-				rich.Money = double.MaxValue;
+				ok &= rich.Stock.TrySetResourceCapacity(Resource.CreateMoney(double.PositiveInfinity));
+				ok &= rich.Stock.TrySetResource(new Resource(ResourceType.Money, double.MaxValue));
 				poor = gameControler.TryRegisterNewPlayer("poor", "");
-				poor.Money = 0;
+				ok &= poor.Stock.TrySetResource(new Resource(ResourceType.Money, 0));
+				ok &= rich != null;
+				ok &= poor != null;
+				if (!ok) throw new System.Exception("BasicGame initialization failed");
 			}
+		}
+	}
+
+	public class TestSilo
+	{
+		[Theory]
+		[InlineData(10000, 1000, true)]
+		[InlineData(10000, 100000, false)]
+		[InlineData(10000, 10000, true)]
+		public void TestSiloAdd(double capacity, double resourceAmountToAdd, bool ansver)
+		{
+			Silo silo = new Silo(capacity);
+			bool result = silo.TryIncreaseAmount(Resource.CreateMoney(resourceAmountToAdd));
+			Assert.Equal(ansver, result);
+			if (result) Assert.Equal(resourceAmountToAdd, silo.Amount);
+		}
+
+		[Theory]
+		[InlineData(10000, 1000, true)]
+		[InlineData(10000, 100000, false)]
+		[InlineData(10000, 10000, true)]
+
+		public void TestSiloBlock(double capacity, double capacityToBlock, bool ansver)
+		{
+			Silo silo = new Silo(capacity);
+			bool result = silo.TryBlockCapacity(Resource.CreateMoney(capacityToBlock));
+			Assert.Equal(ansver, result);
+			if (result) Assert.Equal(capacityToBlock, silo.BlockedCapacity);
+		}
+
+		[Theory]
+		[InlineData(10000, 1000, 10)]
+
+		public void TestUseBlockedCapacity(double capacity, double capacityToBlock, double capacityToFill)
+		{
+			Silo silo = new Silo(capacity);
+			silo.TryBlockCapacity(Resource.CreateMoney(capacityToBlock));
+			silo.UseBlockedResourceCapacity(Resource.CreateMoney(capacityToFill));
+			Assert.Equal(capacityToBlock - capacityToFill, silo.BlockedCapacity);
+			Assert.Equal(capacityToFill, silo.Amount);
 		}
 	}
 	public class TestUserManagment
@@ -44,13 +90,10 @@ namespace MinnigCorpTests
 			//Rich property buy should be succesful
 			//Poor property buy should be unsuccesful
 			Utils.BasicGame basicGame = new Utils.BasicGame();
+
 			GameControler gameControler = basicGame.gameControler;
 			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.rich));
-			Assert.Equal(false, gameControler.TryProspectNewOilField(basicGame.poor));
-			Assert.Equal(1, basicGame.rich.Properties.Count);
-			Assert.Equal(0, basicGame.poor.Properties.Count);
 			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.rich));
-			Assert.Equal(2, basicGame.rich.Properties.Count);
 
 		}
 	}

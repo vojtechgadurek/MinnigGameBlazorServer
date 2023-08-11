@@ -1,6 +1,5 @@
 ///Sources I used: https://github.com/iso8859/AspNetCoreAuthMultiLang/blob/main/Pages/LoadUserContext.cs
 
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MinnigGameBlazorServer.Data;
