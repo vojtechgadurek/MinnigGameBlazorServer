@@ -1,0 +1,14 @@
+﻿<h3>newTradeOffer</h3>
+<inputNumber type="number" @bind="ExpectedPrice" />
+<inputNumber type="number" @bind="amountOfferedToSale" />
+<InputRadioGroup @bind-Value="TradeType">
+	<InputRadio Value="SpotMarketOfferType.Buy" />Buy
+	<InputRadio Value="SpotMarketOfferType.Sell" />Sell
+</InputRadioGroup>
+
+@code {
+	public double ExpectedPrice = 0;
+	public double AmountOfferedToSale = 0;
+	public SpotMarketOfferType TradeType = SpotMarketOfferType.Sell;
+	
+}
