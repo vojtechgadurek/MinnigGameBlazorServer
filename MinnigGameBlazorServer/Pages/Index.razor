@@ -1,56 +1,48 @@
-﻿@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IUserMaintainer UserMaintainer
+﻿@inject IUserMaintainer UserMaintainer
 @inject GameControler GameControler
 @inject EventAgregator<Player?> eventAgregator
+@inject NavigationManager NavigationManager
 @page "/"
 
 <PageTitle>Index</PageTitle>
-
-<AuthorizeView>
-	<NotAuthorized>
-	<div> Please, log in</div>
-	</NotAuthorized>
-
-	<Authorized>
-		@if(Player != null){
+@if (Player != null)
+{
 	<div> Welcome, @Player.Name</div>
 	<div> You have @Player.Money $</div>
 	<div> You have @Player.Oil units of oil</div>
+	<div> You owe @GameControler.Game.Bank.GetCashLend(Player).Amount at @GameControler.Game.Bank.InterestPerRound % ínterest per round</div>
 	<div> Turn @currentCount</div>
-			@if(Player.Admin = true)
-			{
-				<button @onclick="NewRound"> Force new round</button>
-			}
-		}
-	</Authorized>
+	@if (Player.Admin == true)
+	{
+		<button @onclick="NewRound"> Force new round</button>
+	}
+	<label>
+	<InputNumber  @bind-Value="BorrowMore" />
+	</label>
+	<button @onclick="Borrow"> Borrow @BorrowMore $</button>
+}
 
-</AuthorizeView>
 
 @code{
+
+	public double BorrowMore = 0;
+	void Borrow()
+	{
+		GameControler.Game.Bank.TakeLoan(Player, Resource.CreateMoney(BorrowMore));
+	}
 	void NewRound()
 	{
 		GameControler.ForceNewRound(Player);
 		currentCount = GameControler.GetRoundNumber();
 	}
-	#nullable enable
-	public Player? Player = null;
+	
+	[CascadingParameter]
+	public Player? Player { get; set; }
 
 	public int currentCount = 0;
 
-	void OnEvent()
-	{
-		StateHasChanged();
-	}
-
 	protected override void OnInitialized()
 	{
-		Player = ((UserStateMaintainer) AuthenticationStateProvider).Player;
-		eventAgregator.Subscribe((Player? player) => { StateHasChanged(); Player = player; });
-	}
-
-	protected override void OnParametersSet()
-	{
-		Player = ((UserStateMaintainer)AuthenticationStateProvider).Player;
-		StateHasChanged();
+		if (Player is null) NavigationManager.NavigateTo("singin");
 	}
 }

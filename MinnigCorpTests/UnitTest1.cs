@@ -43,7 +43,7 @@ namespace MinnigCorpTests
 		[InlineData(10000, 10000, true)]
 		public void TestSiloAdd(double capacity, double resourceAmountToAdd, bool ansver)
 		{
-			Silo silo = new Silo(capacity);
+			Silo silo = new Silo(Resource.CreateOil(capacity));
 			bool result = silo.TryIncreaseAmount(Resource.CreateMoney(resourceAmountToAdd));
 			Assert.Equal(ansver, result);
 			if (result) Assert.Equal(resourceAmountToAdd, silo.Amount);
@@ -56,7 +56,7 @@ namespace MinnigCorpTests
 
 		public void TestSiloBlock(double capacity, double capacityToBlock, bool ansver)
 		{
-			Silo silo = new Silo(capacity);
+			Silo silo = new Silo(Resource.CreateOil(capacity));
 			bool result = silo.TryBlockCapacity(Resource.CreateMoney(capacityToBlock));
 			Assert.Equal(ansver, result);
 			if (result) Assert.Equal(capacityToBlock, silo.BlockedCapacity);
@@ -67,7 +67,7 @@ namespace MinnigCorpTests
 
 		public void TestUseBlockedCapacity(double capacity, double capacityToBlock, double capacityToFill)
 		{
-			Silo silo = new Silo(capacity);
+			Silo silo = new Silo(Resource.CreateOil(capacity));
 			silo.TryBlockCapacity(Resource.CreateMoney(capacityToBlock));
 			silo.UseBlockedResourceCapacity(Resource.CreateMoney(capacityToFill));
 			Assert.Equal(capacityToBlock - capacityToFill, silo.BlockedCapacity);
@@ -82,7 +82,7 @@ namespace MinnigCorpTests
 			GameControler gameControler = new GameControler();
 			Player? player = gameControler.TryRegisterNewPlayer("test", "test");
 			Player? loggedPlayer = gameControler.TryLoginPlayer("test", "tets");
-			Assert.Equal(null, loggedPlayer);
+			Assert.Null(loggedPlayer);
 			loggedPlayer = gameControler.TryLoginPlayer("test", "test");
 			Assert.Equal(player, loggedPlayer);
 		}
@@ -109,11 +109,11 @@ namespace MinnigCorpTests
 
 			GameControler gameControler = basicGame.GameControler;
 			//Rich has infinite money, so should succeed
-			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.Rich));
+			Assert.True(gameControler.TryProspectNewOilField(basicGame.Rich));
 			//Rich has infinite money, so should succeed
-			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.Rich));
+			Assert.True(gameControler.TryProspectNewOilField(basicGame.Rich));
 			//Poor has no money, so should fail
-			Assert.Equal(false, gameControler.TryProspectNewOilField(basicGame.Poor));
+			Assert.False(gameControler.TryProspectNewOilField(basicGame.Poor));
 
 		}
 

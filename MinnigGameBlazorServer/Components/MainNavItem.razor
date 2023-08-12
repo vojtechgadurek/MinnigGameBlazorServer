@@ -1,0 +1,11 @@
+﻿<div class="nav-item px-3">
+    <NavLink class="nav-link" href="@Href" Match="NavLinkMatch.All">
+        <span class="oi" aria-hidden="true"></span> @Name
+    </NavLink>
+</div>
+@code {
+    [Parameter]
+    public string Href { get; set; } = default!;
+    [Parameter]
+    public string Name { get; set; } = default!;
+}

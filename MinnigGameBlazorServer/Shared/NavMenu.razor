@@ -9,21 +9,9 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="oilfields">
-                <span class="oi oi-plus" aria-hidden="true"></span> Oilfields
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="singin">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Sing in
-            </NavLink>
-        </div>
+        <MainNavItem Href="" Name="Home" />
+        <MainNavItem Href="oilfields" Name="Oilfields" />
+        <MainNavItem Href="singin" Name="Sing in" />
     </nav>
 </div>
 

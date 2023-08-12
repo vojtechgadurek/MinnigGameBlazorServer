@@ -1,17 +1,18 @@
 ﻿@page "/singin"
 @inject AuthenticationStateProvider  AuthenticationStateProvider
 
-<h3>SingInPage</h3>
-<AuthorizeView>
-<NotAuthorized>
-		 <SingIn></SingIn>
-	</NotAuthorized>
-	<Authorized>
-		<div> Welcome, @context.User.Identity.Name</div>
-		<LogOut></LogOut>
-	</Authorized>
-</AuthorizeView>
+@if (Player == null)
+{
+	<SingIn></SingIn>
+}
+else
+{
+	<LogOut></LogOut>
+}
 
 @code{
+
+	[CascadingParameter]
+	public Player? Player { get; set; }
 }
 

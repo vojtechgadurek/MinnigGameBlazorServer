@@ -1,8 +1,9 @@
-﻿@inject AuthenticationStateProvider AuthenticationStateProvider
-<CascadingAuthenticationState>
+﻿@inject EventAgregator<Player> EventAgregator
+@inject UserStateMaintainer UserStateMaintainer
+<CascadingValue Value="Player">
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
@@ -12,16 +13,19 @@
             </LayoutView>
         </NotFound>
     </Router>
-</CascadingAuthenticationState>
+</CascadingValue>
 
 @code{
-
+    Player? Player = null;
+    protected override void OnInitialized()
+    {
+        EventAgregator.Subscribe((Player? player) => { StateHasChanged(); Player = player; });   
+    }
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
-            new Task (() => userStateMaintainer.Initialize()).RunSynchronously();
+            UserStateMaintainer.Initialize();
             StateHasChanged();
         }
     }

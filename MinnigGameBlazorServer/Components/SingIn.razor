@@ -1,5 +1,6 @@
-﻿@inject NavigationManager navigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
+﻿@inject NavigationManager NavigationManager
+@inject UserStateMaintainer UserStateMaintainer
+@inject EventAgregator<Player?> EventAgregator
 @inject IJSRuntime JS
 
 
@@ -23,29 +24,28 @@
     string username = "";
     string password = "";
 
+
     //Creates instance of the error message component
     async Task TryCreateNewUser()
     {
-        UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
-        if (!userStateMaintainer.TryRegisterNewPlayer(username, password))
+        if (!UserStateMaintainer.TryRegisterNewPlayer(username, password))
         {
             await JS.InvokeVoidAsync("alert", "Registering failed, username probably taken");
         }
         else
         {
-            navigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
     }
     async Task TryLogIn()
     {
-        UserStateMaintainer userStateMaintainer = (UserStateMaintainer)AuthenticationStateProvider;
-        if (!userStateMaintainer.TryLoginPlayer(username, password))
+        if (!UserStateMaintainer.TryLoginPlayer(username, password))
         {
             await JS.InvokeVoidAsync("alert", "Login failed, wrong user name or password");
         }
         else
         {
-            navigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
 
         }
     }

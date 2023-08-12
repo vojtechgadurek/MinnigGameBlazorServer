@@ -9,15 +9,14 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using MinnigGameBlazorServer.Data;
+using GameCorpLib.State;
 
 namespace MinnigGameBlazorServer.Services
 {
-	public class UserStateMaintainer : AuthenticationStateProvider
+	public class UserStateMaintainer
 	{
 		private Player? _player = null;
 		public Player? Player { get { return _player; } }
-		private AuthenticationState _notLoggedUserAuthState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-		private AuthenticationState _currentAuthState;
 		private IUserMaintainer _userMaintainer;
 		bool _isInitialized = false;
 		private readonly ProtectedLocalStorage _sessionStore;
@@ -28,14 +27,13 @@ namespace MinnigGameBlazorServer.Services
 		{
 			_sessionStore = sessionStore;
 			_userMaintainer = userMaintainer;
-			_currentAuthState = _notLoggedUserAuthState;
 			_logger = logger;
 			_eventAgregator = eventAgregator;
 
 			_logger.Log(LogLevel.Information, "User state maintainer created {code}", this.GetHashCode());
 		}
 
-		public async Task Initialize()
+		public async Task<Player?> Initialize()
 		{
 			Monitor.Enter(this);
 			if (!_isInitialized)
@@ -44,11 +42,13 @@ namespace MinnigGameBlazorServer.Services
 				Player? MaybeStoredPlayer = await GetStoredPlayer();
 				if (MaybeStoredPlayer != null)
 				{
-					await UpdatePlayer(MaybeStoredPlayer);
+					UpdatePlayer(MaybeStoredPlayer);
 				}
 				_logger.Log(LogLevel.Information, "User state maintainer is initilized");
 			}
 			Monitor.Exit(this);
+			return _player;
+
 		}
 		private async Task<Player?> GetStoredPlayer()
 		{
@@ -73,16 +73,7 @@ namespace MinnigGameBlazorServer.Services
 			return _userMaintainer.TryGetPlayerByName(usernameStored.Value.Value);
 		}
 
-		private ClaimsPrincipal CreateClaimsPrincipalFromPlayer(Player player)
-		{
-			Claim UserName = new Claim(ClaimTypes.Name, player.Name);
-			Claim Role = new Claim(ClaimTypes.Role, player.Admin ? "Admin" : "Regular");
-			ClaimsIdentity claimsIdentity = new ClaimsIdentity(new[] { UserName, Role }, "Server authentication");
-			ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-			return claimsPrincipal;
-		}
-
-		private Task<AuthenticationState> UpdatePlayer(Player? player)
+		private void UpdatePlayer(Player? player)
 		{
 			//Has to be called from component otherwise js interop will not work
 
@@ -93,7 +84,6 @@ namespace MinnigGameBlazorServer.Services
 
 			if (player == null)
 			{
-				_currentAuthState = _notLoggedUserAuthState;
 				_sessionStore.DeleteAsync("storedUsername");
 				if (_player != null)
 					_logger.Log(LogLevel.Information, "user {user} logged out", _player.Name);
@@ -102,20 +92,11 @@ namespace MinnigGameBlazorServer.Services
 			}
 			else
 			{
-				_currentAuthState = new AuthenticationState(CreateClaimsPrincipalFromPlayer(player));
 				_sessionStore.SetAsync("storedUsername", player.Name);
 				_logger.Log(LogLevel.Information, "user {user} logged in", player.Name);
 			}
 			_player = player;
-
-			var ansver = GetAuthenticationStateAsync();
-			NotifyAuthenticationStateChanged(ansver);
 			_eventAgregator.Publish(player);
-			return ansver;
-		}
-		public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-		{
-			return _currentAuthState;
 		}
 		/// <summary>
 		/// Tries to login player, if successfull, updates stateProvider and returns true, otherwise returns false

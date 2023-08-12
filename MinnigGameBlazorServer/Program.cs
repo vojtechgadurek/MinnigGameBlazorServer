@@ -19,7 +19,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IUserMaintainer>(gameControler);
 builder.Services.AddSingleton<GameControler>(gameControler);
-builder.Services.AddScoped<AuthenticationStateProvider, UserStateMaintainer>();
+builder.Services.AddScoped<UserStateMaintainer>();
 builder.Services.AddScoped<EventAgregator<Player>>();
 
 

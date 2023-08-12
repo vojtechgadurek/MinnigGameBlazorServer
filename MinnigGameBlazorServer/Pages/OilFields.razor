@@ -2,10 +2,11 @@
 @inject EventAgregator<Player?> EventAgregator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserMaintainer UserMaintainer
+@inject NavigationManager NavigationManager
 
 @page "/oilfields"
 
-<AuthorizeView>
+@if(Player is not null){}
 <PageTitle>Oilfield</PageTitle>
 	@if (Player is not null)
 	{
@@ -18,30 +19,21 @@
 		}
 	}
 	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Try buy new OilField for @GameControler.OilFieldPrice.Amount</button>
-</AuthorizeView>
+}
 
 
 @code {
 	private int currentCount = 0;
 
-	public Player? Player = null;
+	[CascadingParameter]
+	public Player? Player { get; set; }
 
 
 	protected override void OnInitialized()
 	{
-		EventAgregator.Subscribe((Player? player) => { StateHasChanged(); Player = player; });
-		
+		if (Player is null) NavigationManager.NavigateTo("singin");
 	}
 
-	protected override void OnParametersSet()
-	{
-		string? name = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
-		if (name is not null)
-		{
-			Player = UserMaintainer.TryGetPlayerByName(name);
-		}
-		StateHasChanged();
-	}
 
     private void TryProspectNewOilField()
     {
