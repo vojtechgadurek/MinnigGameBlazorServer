@@ -26,7 +26,7 @@
 	void TryCreateNewTradeOffer()
 	{
 
-		if(!GameControler.Game.SpotMarket.TryCreateNewTradeOffer(Resource.CreateOil(AmountOfferedToSale), Resource.CreateMoney(ExpectedPrice), Player, TradeType))
+		if(!GameControler.Game.SpotMarket.TryCreateNewTradeOffer(Resource.CreateOil(AmountOfferedToSale), Resource.CreateMoney(ExpectedPrice), Player.Trader, TradeType))
 		{
 			JS.InvokeVoidAsync("alert", "Creating new trade offer failed");
 		};

@@ -1,10 +1,16 @@
 ///Sources I used: https://github.com/iso8859/AspNetCoreAuthMultiLang/blob/main/Pages/LoadUserContext.cs
+global using GameCorpLib.Utils;
+global using GameCorpLib.State;
+global using GameCorpLib.Tradables;
+global using GameCorpLib.Transactions;
+global using GameCorpLib.Stocks;
+global using GameCorpLib.Markets;
+global using GameCorpLib;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MinnigGameBlazorServer.Data;
 using MinnigGameBlazorServer.Services;
-using GameCorpLib;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);

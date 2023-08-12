@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using GameCorpLib;
 using GameCorpLib.State;
-using GameCorpLib.Stock;
+using GameCorpLib.Stocks;
 using GameCorpLib.Tradables;
 namespace MinnigCorpTests
 {

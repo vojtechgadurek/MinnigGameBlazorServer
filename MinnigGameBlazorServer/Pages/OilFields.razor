@@ -10,7 +10,7 @@
 <PageTitle>Oilfield</PageTitle>
 	@if (Player is not null)
 	{
-		@foreach (var oilField in Player.Properties.GetEnumerable())
+		@foreach (var oilField in Player.Trader.Properties.GetEnumerable())
 		{
 			if (oilField is OilField)
 			{
