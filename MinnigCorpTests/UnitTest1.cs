@@ -2,8 +2,8 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using GameCorpLib;
-using GameCorpLib.Persons;
 using GameCorpLib.State;
+using GameCorpLib.Stock;
 using GameCorpLib.Tradables;
 namespace MinnigCorpTests
 {

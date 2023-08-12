@@ -8,8 +8,8 @@
 @if (Player != null)
 {
 	<div> Welcome, @Player.Name</div>
-	<div> You have @Player.Money $</div>
-	<div> You have @Player.Oil units of oil</div>
+	<div> You have @Player.Trader.Money $</div>
+	<div> You have @Player.Trader.Oil units of oil</div>
 	<div> You owe @GameControler.Game.Bank.GetCashLend(Player).Amount at @GameControler.Game.Bank.InterestPerRound % ínterest per round</div>
 	<div> Turn @currentCount</div>
 	@if (Player.Admin == true)
