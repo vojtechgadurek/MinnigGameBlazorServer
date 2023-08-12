@@ -11,20 +11,25 @@ namespace MinnigCorpTests
 	{
 		public class BasicGame
 		{
-			public GameControler gameControler;
-			public Player? rich;
-			public Player? poor;
+			/// <summary>
+			/// Create a basic game for testing purposes
+			/// </summary>
+			public GameControler GameControler;
+			//Rich should have infinite money
+			public Player? Rich;
+			//Poor should have no money
+			public Player? Poor;
 			public BasicGame()
 			{
-				gameControler = new GameControler();
+				GameControler = new GameControler();
 				bool ok = true;
-				rich = gameControler.TryRegisterNewPlayer("rich", "");
-				ok &= rich.Stock.TrySetResourceCapacity(Resource.CreateMoney(double.PositiveInfinity));
-				ok &= rich.Stock.TrySetResource(new Resource(ResourceType.Money, double.MaxValue));
-				poor = gameControler.TryRegisterNewPlayer("poor", "");
-				ok &= poor.Stock.TrySetResource(new Resource(ResourceType.Money, 0));
-				ok &= rich != null;
-				ok &= poor != null;
+				Rich = GameControler.TryRegisterNewPlayer("rich", "");
+				ok &= Rich.Stock.TrySetResourceCapacity(Resource.CreateMoney(double.PositiveInfinity));
+				ok &= Rich.Stock.TrySetResource(new Resource(ResourceType.Money, double.MaxValue));
+				Poor = GameControler.TryRegisterNewPlayer("poor", "");
+				ok &= Poor.Stock.TrySetResource(new Resource(ResourceType.Money, 0));
+				ok &= Rich != null;
+				ok &= Poor != null;
 				if (!ok) throw new System.Exception("BasicGame initialization failed");
 			}
 		}
@@ -82,6 +87,14 @@ namespace MinnigCorpTests
 			Assert.Equal(player, loggedPlayer);
 		}
 	}
+	public class MockProperty : Property
+	{
+		public MockProperty(Trader owner, PropertyRegister propertyRegister) : base(owner, propertyRegister) { }
+		public override void Update()
+		{
+			throw new NotImplementedException();
+		}
+	}
 	public class TestPropertyManagment
 	{
 		[Fact]
@@ -89,11 +102,28 @@ namespace MinnigCorpTests
 		{
 			//Rich property buy should be succesful
 			//Poor property buy should be unsuccesful
+			//This test is testing if prospesting works correctly
+
+			//There is double test for rich to see if double buy works correctly
 			Utils.BasicGame basicGame = new Utils.BasicGame();
 
-			GameControler gameControler = basicGame.gameControler;
-			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.rich));
-			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.rich));
+			GameControler gameControler = basicGame.GameControler;
+			//Rich has infinite money, so should succeed
+			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.Rich));
+			//Rich has infinite money, so should succeed
+			Assert.Equal(true, gameControler.TryProspectNewOilField(basicGame.Rich));
+			//Poor has no money, so should fail
+			Assert.Equal(false, gameControler.TryProspectNewOilField(basicGame.Poor));
+
+		}
+
+		[Fact]
+		public void TestChangeOwner()
+		{
+			/*
+			var basicGame = new Utils.BasicGame();
+			MockProperty newProperty = new MockProperty(basicGame.Rich, basicGame.GameControler.Game.Registers.PropertyRegister);
+			*/
 
 		}
 	}

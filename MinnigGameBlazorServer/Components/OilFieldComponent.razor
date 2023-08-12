@@ -1,9 +1,12 @@
-﻿
+﻿@inject IJSRuntime JS
+@inject EventAgregator<Player> EventAgregator;
 <h3>OilField</h3>
 <div>Price per unit mined: @OilField.PricePerUnitMined</div>
 <div>Number of rigs: @OilField.NumberOfMiningRings</div>
 <div>Price per rig: @OilField.BasePricePerRigBought</div>
-<button onclick="TryBuyOilRig"></button>
+<div> Oil mined next round @OilField.GetExpectedMinedOilUnits()</div>
+<div> Unkeep payed next round for the mine @OilField.GetExpectedCostForMining().Amount</div>
+<button @onclick="TryBuyOilRig"> Try buy oil rig for: @OilField.BasePricePerRigBought</button>
 
 @code {
 	[Parameter]
@@ -14,6 +17,9 @@
 		if (OilField.TryBuyMiningRing())
 		{
 			StateHasChanged();
+		}
+		else{
+			JS.InvokeVoidAsync("alert", "You don't have enough money");
 		}
 	}
 

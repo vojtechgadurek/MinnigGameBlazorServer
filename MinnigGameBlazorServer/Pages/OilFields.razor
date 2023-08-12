@@ -17,24 +17,20 @@
 			}
 		}
 	}
-	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Click me</button>
+	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Try buy new OilField for @GameControler.OilFieldPrice.Amount</button>
 </AuthorizeView>
 
 
 @code {
-    private int currentCount = 0;
+	private int currentCount = 0;
 
 	public Player? Player = null;
 
-	public void OnEvent(Player eventObject)
-	{
-		Player = eventObject;
-		StateHasChanged();
-	}
 
 	protected override void OnInitialized()
 	{
-		EventAgregator.Subscribe((player) => { Player = player; StateHasChanged(); return player; });
+		EventAgregator.Subscribe((Player? player) => { StateHasChanged(); Player = player; });
+		
 	}
 
 	protected override void OnParametersSet()

@@ -44,7 +44,7 @@ namespace MinnigGameBlazorServer.Services
 				Player? MaybeStoredPlayer = await GetStoredPlayer();
 				if (MaybeStoredPlayer != null)
 				{
-					UpdatePlayer(MaybeStoredPlayer);
+					await UpdatePlayer(MaybeStoredPlayer);
 				}
 				_logger.Log(LogLevel.Information, "User state maintainer is initilized");
 			}

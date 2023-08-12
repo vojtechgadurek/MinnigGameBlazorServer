@@ -1,5 +1,6 @@
 ﻿@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserMaintainer UserMaintainer
+@inject GameControler GameControler
 @inject EventAgregator<Player?> eventAgregator
 @page "/"
 
@@ -14,36 +15,42 @@
 		@if(Player != null){
 	<div> Welcome, @Player.Name</div>
 	<div> You have @Player.Money $</div>
+	<div> You have @Player.Oil units of oil</div>
+	<div> Turn @currentCount</div>
+			@if(Player.Admin = true)
+			{
+				<button @onclick="NewRound"> Force new round</button>
+			}
 		}
-		lol
-		@name
 	</Authorized>
 
 </AuthorizeView>
 
 @code{
+	void NewRound()
+	{
+		GameControler.ForceNewRound(Player);
+		currentCount = GameControler.GetRoundNumber();
+	}
 	#nullable enable
 	public Player? Player = null;
-	public string? name;
 
-	public void OnEvent(Player eventObject)
+	public int currentCount = 0;
+
+	void OnEvent()
 	{
-		Player = eventObject;
 		StateHasChanged();
 	}
 
 	protected override void OnInitialized()
 	{
-		eventAgregator.Subscribe((player) => { Player = player; StateHasChanged(); return player; });
+		Player = ((UserStateMaintainer) AuthenticationStateProvider).Player;
+		eventAgregator.Subscribe((Player? player) => { StateHasChanged(); Player = player; });
 	}
 
 	protected override void OnParametersSet()
 	{
-		name = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.Name;
-		if (name is not null)
-		{
-			Player = UserMaintainer.TryGetPlayerByName(name);
-		}
+		Player = ((UserStateMaintainer)AuthenticationStateProvider).Player;
 		StateHasChanged();
 	}
 }
