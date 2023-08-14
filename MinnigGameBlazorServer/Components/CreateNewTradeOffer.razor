@@ -1,16 +1,23 @@
 ﻿@inject GameControler GameControler
-@inject JSRuntime JS
+@inject IJSRuntime JS
 @inject EventAgregator<Player> EventAgregator
-<h3>newTradeOffer</h3>
-<inputNumber type="number" @bind="ExpectedPrice" />
-<inputNumber type="number" @bind="amountOfferedToSale" />
+<div>
+<h3>Submit trade to SpotMarket</h3>
+<label>
+	Expected price per unit
+<InputNumber  @bind-Value="ExpectedPrice" />
+</label>
+<label>
+	Amount of resources in trade
+<InputNumber  @bind-Value="AmountOfferedToSale" />
+</label>
 <InputRadioGroup @bind-Value="TradeType">
 	<InputRadio Value="SpotMarketOfferType.Buy" />Buy
 	<InputRadio Value="SpotMarketOfferType.Sell" />Sell
 </InputRadioGroup>
 
 <button @onclick="TryCreateNewTradeOffer">Create</button>
-
+</div>
 @code {
 
 	[CascadingParameter]

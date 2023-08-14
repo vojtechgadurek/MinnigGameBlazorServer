@@ -1,1 +1,27 @@
-﻿
+﻿@inject GameControler GameControler
+<h3>Spot Market</h3>
+
+Buy offers
+
+
+<ul class="list-group">
+@foreach (var item in GameControler.Game.SpotMarket.BuyOffers)
+{
+	<li>
+	<SpotMarketTradeComponent SpotMarketOffer=item></SpotMarketTradeComponent>
+	</li>
+}
+</ul>
+Sell offers
+
+<ul class="list-group">
+@foreach (var item in GameControler.Game.SpotMarket.SellOffers)
+{
+		<li class="list-group-item">
+		<SpotMarketTradeComponent SpotMarketOffer=item></SpotMarketTradeComponent>
+	</li>
+}
+</ul>
+@code {
+	
+}

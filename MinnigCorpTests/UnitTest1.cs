@@ -2,9 +2,12 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using GameCorpLib;
+using GameCorpLib.Markets;
 using GameCorpLib.State;
 using GameCorpLib.Stocks;
 using GameCorpLib.Tradables;
+using GameCorpLib.Transactions;
+
 namespace MinnigCorpTests
 {
 	static public class Utils
@@ -140,6 +143,67 @@ namespace MinnigCorpTests
 			register.RegisterItem(2, out second);
 			Assert.Equal(0, first);
 			Assert.Equal(1, second);
+		}
+	}
+
+	public class TestTransasctions
+	{
+		[Fact]
+		public void TestPartialTransactionSimple1()
+		{
+			var Game = new Utils.BasicGame();
+			Assert.True(Game.Poor.Stock.TrySetResource(Resource.CreateOil(1000)));
+			var transaction = new ProportionalTransaction(
+					Resource.CreateOil(100),
+					Resource.CreateMoney(100),
+					Game.Poor.Trader,
+					Game.Rich.Trader);
+			Assert.True(transaction.TryExecuteProportional(0.5));
+			Assert.Equal(50, Game.Rich.Stock.GetResource(ResourceType.Oil).Amount);
+			Assert.Equal(950, Game.Poor.Stock.GetResource(ResourceType.Oil).Amount);
+
+			Assert.True(transaction.TryExecuteProportional(1));
+			Assert.False(transaction.TryExecuteProportional(0));
+			Assert.False(transaction.TryExecuteProportional(0.5));
+
+		}
+
+		[Fact]
+		public void TestPartialTranfer()
+		{
+			var Game = new Utils.BasicGame();
+			var transfer = new ResourceTransfer(Game.Rich.Trader, Game.Poor.Trader, Resource.CreateMoney(1000));
+
+			Assert.True(transfer.TryExecutePartialTransfer(Resource.CreateMoney(100)));
+			Assert.Equal(100, Game.Poor.Stock.GetResource(ResourceType.Money).Amount);
+
+			Assert.True(transfer.TryExecutePartialTransfer(Resource.CreateMoney(900)));
+			Assert.Equal(1000, Game.Poor.Stock.GetResource(ResourceType.Money).Amount);
+
+			Assert.False(transfer.TryExecutePartialTransfer(Resource.CreateMoney(0)));
+			Assert.Equal(1000, Game.Poor.Stock.GetResource(ResourceType.Money).Amount);
+
+
+		}
+	}
+
+
+	public class TestSpotMarket
+	{
+		[Fact]
+		public void TestCreateTrade()
+		{
+			var Game = new Utils.BasicGame();
+			var market = Game.GameControler.Game.SpotMarket;
+			Game.Poor.Stock.TryAddResource(Resource.CreateOil(1000));
+			Assert.True(market.TryCreateNewTradeOffer(Resource.CreateOil(10), Resource.CreateMoney(10), Game.Poor.Trader, SpotMarketOfferType.Sell));
+			Assert.Equal(1, market.SellOffers.Count);
+			Assert.True(market.TryCreateNewTradeOffer(Resource.CreateOil(10), Resource.CreateMoney(10), Game.Poor.Trader, SpotMarketOfferType.Sell));
+			Assert.Equal(2, market.SellOffers.Count);
+
+			Assert.True(market.TryCreateNewTradeOffer(Resource.CreateOil(10), Resource.CreateMoney(10), Game.Rich.Trader, SpotMarketOfferType.Buy));
+
+			Assert.Equal(1, market.SellOffers.Count);
 		}
 	}
 }
