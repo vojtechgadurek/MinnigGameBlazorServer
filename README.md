@@ -8,7 +8,7 @@ Následujicí rozdělení jsem zvolil, aby se nemíchala logika hry a uživatels
 Pro webovou část jsem použil Blazor Server, ostatní jsem napsal v normálním C#. Důvodem je moje malá znalost Javascriptu.
 # Do budoucna
 - Rád doplnil nějaký logging systém, případně upravil navratové hodnoty, tak aby šlo lépe rozpoznat, proč daná funkce nefungovala z binárního ano/ne. 
-- V budoucnu bych rád upravil zamykání surovin/blokovaní kapacity, tak aby více omezovalo, kdo ji může provést
+- V budoucnu bych rád upravil zamykání surovin/blokovaní kapacity, tak aby více omezovalo, kdo ji může provést - čátečně hotovo
 - Dále bych rád opustil třidu GameController, která velmi omezuje výhody, které plynou z Blazoru a services, (a je otázkou zda vyhody, které přináší za to stojí) a vychází z návrhu, který více odstinoval webovou část od samotné hry
 - Dále bych rád přepsal Resources, tak aby byly více staticky kontrolovatelné při kompilaci - done :D
 
