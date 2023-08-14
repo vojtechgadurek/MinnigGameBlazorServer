@@ -35,7 +35,7 @@
 	public double BorrowMore = 0;
 	void Borrow()
 	{
-		GameControler.Game.Bank.TakeLoan(Player, Resource.CreateMoney(BorrowMore));
+		GameControler.Game.Bank.TakeLoan(Player, new R<Money>(BorrowMore));
 	}
 	void NewRound()
 	{

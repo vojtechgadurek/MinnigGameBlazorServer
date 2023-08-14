@@ -1,9 +1,9 @@
-﻿
+﻿@typeparam TResourceType
 
 Price @SpotMarketOffer.PricePerUnit.Amount
 Amount @SpotMarketOffer.ResourceTraded.Amount
 
 @code{
 	[Parameter]
-	public SpotMarketOffer SpotMarketOffer { get; set; }
+	public SpotMarketOffer<TResourceType> SpotMarketOffer { get; set; }
 }

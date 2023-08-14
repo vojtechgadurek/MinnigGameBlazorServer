@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\GameCorpLib\GameCorpLib\GameCorpLib.csproj" />
-		<ProjectReference Include="..\..\miningcorp\miningcorp\GameCorpLib.csproj" />
 	</ItemGroup>
 
 </Project>
