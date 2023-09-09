@@ -52,6 +52,7 @@ namespace MinnigGameBlazorServer.Services
 		}
 		private async Task<Player?> GetStoredPlayer()
 		{
+			if (!_isInitialized) await Initialize();
 
 			ProtectedBrowserStorageResult<string>? usernameStored = null;
 			try

@@ -1,0 +1,14 @@
+﻿@page "/stock"
+<h3>StockPage</h3>
+@if (Player is not null)
+{
+<div class="card-group">
+	<SiloComponent stock="Player.Stock" TResourceType="Money"></SiloComponent>
+	<SiloComponent stock="Player.Stock" TResourceType="Oil"></SiloComponent>
+</div>
+}
+@code {
+	[CascadingParameter]
+	Player? Player { get; set; }
+}
+

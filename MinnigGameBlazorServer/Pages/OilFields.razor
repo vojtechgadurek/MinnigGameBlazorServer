@@ -6,7 +6,8 @@
 
 @page "/oilfields"
 
-@if(Player is not null){}
+@if(Player is null){}
+else{
 <PageTitle>Oilfield</PageTitle>
 	@if (Player is not null)
 	{
@@ -18,9 +19,8 @@
 			}
 		}
 	}
-	<button class="btn btn-primary" @onclick="TryProspectNewOilField">Try buy new OilField for @GameControler.OilFieldPrice.Amount</button>
+<button class="btn btn-primary" @onclick="TryProspectNewOilField">Try buy new OilField for @GameControler.OilFieldPrice.Amount</button>
 }
-
 
 @code {
 	private int currentCount = 0;

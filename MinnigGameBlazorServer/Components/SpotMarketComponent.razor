@@ -1,13 +1,15 @@
 ﻿@inject GameControler GameControler
+@inject EventAgregator<SpotMarket> EventAgregator
+@implements IDisposable
 <h3>Spot Market</h3>
 
 Buy offers
 
 
 <ul class="list-group">
-@foreach (var item in GameControler.Game.SpotMarket.BuyOffers)
+	@foreach (var item in GameControler.Game.SpotMarket.GetSpotMarket<Oil>().BuyOffers)
 {
-	<li>
+	<li class="list-group-item">
 	<SpotMarketTradeComponent SpotMarketOffer=item></SpotMarketTradeComponent>
 	</li>
 }
@@ -15,7 +17,7 @@ Buy offers
 Sell offers
 
 <ul class="list-group">
-@foreach (var item in GameControler.Game.SpotMarket.SellOffers)
+@foreach (var item in GameControler.Game.SpotMarket.GetSpotMarket<Oil>().SellOffers)
 {
 		<li class="list-group-item">
 		<SpotMarketTradeComponent SpotMarketOffer=item></SpotMarketTradeComponent>
@@ -23,5 +25,13 @@ Sell offers
 }
 </ul>
 @code {
-	
+	protected override void OnInitialized()
+	{
+		EventAgregator.Subscribe(this, (SpotMarket spotMarket) => InvokeAsync(() =>  StateHasChanged() ));
+	}
+public void Dispose()
+	{
+		EventAgregator.Unsubscribe(this);
+	}
+
 }

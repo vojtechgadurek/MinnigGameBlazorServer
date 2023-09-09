@@ -1,6 +1,7 @@
 ﻿@inject IUserMaintainer UserMaintainer
 @inject GameControler GameControler
 @inject EventAgregator<Player?> eventAgregator
+
 @inject NavigationManager NavigationManager
 @page "/"
 
@@ -11,6 +12,7 @@
 		<div> Welcome, @Player.Name</div>
 		<div> You have @Player.Trader.Money $</div>
 		<div> You have @Player.Trader.Oil units of oil</div>
+
 		<div> You owe @GameControler.Game.Bank.GetCashLend(Player).Amount at @GameControler.Game.Bank.InterestPerRound % interest per round</div>
 		<div> Turn @GameControler.GetRoundNumber()</div>
 		@if (Player.Admin == true)

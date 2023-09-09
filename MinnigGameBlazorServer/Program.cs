@@ -27,6 +27,7 @@ builder.Services.AddSingleton<IUserMaintainer>(gameControler);
 builder.Services.AddSingleton<GameControler>(gameControler);
 builder.Services.AddScoped<UserStateMaintainer>();
 builder.Services.AddScoped<EventAgregator<Player>>();
+builder.Services.AddSingleton<EventAgregator<SpotMarket>>();
 
 
 

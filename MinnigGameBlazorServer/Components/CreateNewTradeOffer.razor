@@ -1,6 +1,7 @@
 ﻿@inject GameControler GameControler
 @inject IJSRuntime JS
-@inject EventAgregator<Player> EventAgregator
+@inject EventAgregator<SpotMarket> EventAgregator
+
 <div>
 <h3>Submit trade to SpotMarket</h3>
 <label>
@@ -28,15 +29,20 @@
 
 	override protected void OnInitialized()
 	{
-		
+
 	}
 	void TryCreateNewTradeOffer()
 	{
 
-		if(!GameControler.Game.SpotMarket.TryCreateNewTradeOffer(new R<Oil>(AmountOfferedToSale), new R<Money>(ExpectedPrice), Player.Trader, TradeType))
+		if(!GameControler.Game.SpotMarket.GetSpotMarket<Oil>().TryCreateNewTradeOffer(new R<Oil>(AmountOfferedToSale), new R<Money>(ExpectedPrice), Player.Trader, TradeType))
 		{
 			JS.InvokeVoidAsync("alert", "Creating new trade offer failed");
+		}
+		else
+		{
+			EventAgregator.Publish(GameControler.Game.SpotMarket);
 		};
+
 
 	}
 }

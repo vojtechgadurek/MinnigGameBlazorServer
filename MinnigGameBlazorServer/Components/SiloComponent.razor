@@ -1,0 +1,27 @@
+﻿@typeparam TResourceType where TResourceType : IResource
+
+<div class="card">
+	<div class="card-header">
+		<h5 class="card-title">@resourceName</h5>
+	</div>
+	<div class="card-body">
+		<ResourceSiloRow Value="@Amount().Amount" Name="Amount"></ResourceSiloRow>
+		<ResourceSiloRow Value="@Capacity().Amount" Name="Capacity"></ResourceSiloRow>
+		<ResourceSiloRow Value="@BlockedCapacity().Amount" Name="Blocked Capacity"></ResourceSiloRow>
+		<ResourceSiloRow Value="@LockedResource().Amount" Name="Locked Resource"></ResourceSiloRow>
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public Stock stock { get; set; }
+
+
+	string resourceName = Resources.GetResourceAttributeByType(typeof(TResourceType)).Name;
+
+	R<TResourceType> Amount () => stock.GetResource<TResourceType>();
+	R<Capacity<TResourceType>> Capacity() => stock.GetCapacity<TResourceType>(); 
+	R<Capacity<TResourceType>> BlockedCapacity() => stock.GetBlockedCapacity<TResourceType>();
+	R<TResourceType> LockedResource() => stock.GetLockedResourceAmount<TResourceType>();
+}
