@@ -1,5 +1,6 @@
 ﻿@inject EventAgregator<Player> EventAgregator
 @inject UserStateMaintainer UserStateMaintainer
+@inject UserState<Player> UserState
 @implements IDisposable
 <CascadingValue Value="Player">
     <Router AppAssembly="@typeof(App).Assembly">
@@ -20,8 +21,23 @@
     Player? Player = null;
     protected override void OnInitialized()
     {
-        EventAgregator.Subscribe(this,(Player? player) => {Player = player; StateHasChanged(); });   
+        EventAgregator.Subscribe(this,(Player? player) => { PlayerChange(player); StateHasChanged(); }); 
     }
+
+    void PlayerChange(Player? newPlayer)
+    {
+        if(Player == newPlayer) return;
+        if(Player is not null)
+        {
+            UserState.Unsubscribe(Player, this);
+        }
+        if(newPlayer is not null)
+        {
+            UserState.Subscribe(newPlayer, this, (x) => InvokeAsync(() => StateHasChanged()));
+        }
+        Player = newPlayer;
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -30,9 +46,12 @@
             StateHasChanged();
         }
     }
+
+
     public void Dispose()
     {
         EventAgregator.Unsubscribe(this);
+        UserState.Unsubscribe(Player, this);
     }
 }
 

@@ -3,6 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserMaintainer UserMaintainer
 @inject NavigationManager NavigationManager
+@inject UserState<Player> userState
 
 @page "/oilfields"
 
@@ -39,5 +40,7 @@ else{
     {
 		
         GameControler.TryProspectNewOilField(Player);
+		userState.Publish(Player, Player);
+
     }
 }

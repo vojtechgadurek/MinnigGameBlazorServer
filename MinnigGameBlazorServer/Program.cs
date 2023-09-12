@@ -28,9 +28,7 @@ builder.Services.AddSingleton<GameControler>(gameControler);
 builder.Services.AddScoped<UserStateMaintainer>();
 builder.Services.AddScoped<EventAgregator<Player>>();
 builder.Services.AddSingleton<EventAgregator<SpotMarket>>();
-
-
-
+builder.Services.AddSingleton<UserState<Player>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 ﻿@inject IUserMaintainer UserMaintainer
 @inject GameControler GameControler
 @inject EventAgregator<Player?> eventAgregator
+@inject UserState<Player> userState
 
 @inject NavigationManager NavigationManager
 @page "/"
@@ -33,16 +34,18 @@
 
 @code{
 
-	
+
 	public double BorrowMore = 0;
 	void Borrow()
 	{
 		GameControler.Game.Bank.TakeLoan(Player, new R<Money>(BorrowMore));
+		userState.Publish(Player, Player);
 	}
 	void NewRound()
 	{
 		GameControler.ForceNewRound(Player);
 		currentCount = GameControler.GetRoundNumber();
+		userState.Publish(Player, Player);
 	}
 	
 	[CascadingParameter]

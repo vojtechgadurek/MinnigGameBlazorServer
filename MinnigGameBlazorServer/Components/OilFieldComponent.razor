@@ -1,5 +1,6 @@
 ﻿@inject IJSRuntime JS
 @inject EventAgregator<Player> EventAgregator;
+@inject UserState<Player> userState;
 <h3>OilField</h3>
 <div>Price per unit mined: @OilField.PricePerUnitMined</div>
 <div>Number of rigs: @OilField.NumberOfMiningRings</div>
@@ -12,16 +13,22 @@
 	[Parameter]
 	public OilField OilField { get; set; }
 
+	[CascadingParameter]
+	public Player Player { get; set; }
+
 	void TryBuyOilRig()
 	{
 		if (OilField.TryBuyMiningRing())
 		{
 			StateHasChanged();
+			userState.Publish(Player, Player);	
 		}
 		else{
 			JS.InvokeVoidAsync("alert", "You don't have enough money");
 		}
 	}
+
+
 
 	
 }
