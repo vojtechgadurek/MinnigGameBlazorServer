@@ -1,6 +1,7 @@
 ﻿@inject GameControler GameControler
 @inject IJSRuntime JS
 @inject EventAgregator<SpotMarket> EventAgregator
+@inject UserState<Player> userState
 
 <div>
 <h3>Submit trade to SpotMarket</h3>
@@ -41,6 +42,7 @@
 		else
 		{
 			EventAgregator.Publish(GameControler.Game.SpotMarket);
+			userState.Publish(Player, Player);
 		};
 
 
