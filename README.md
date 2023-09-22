@@ -21,7 +21,7 @@ protected override void OnInitialized()
 //Publishes eventual change, if this method is called
 void Publish(Foo foo){EventAgregator.Publish(foo)
 }
-˙``
+```
 ### UserStateMaintainer
 Udržuje stav přihlášení hráče, ukládá posledního přidaného hráče do prohlížeče skrze protected storage. V případě odhlášení dané uživatelské jméno smaže.
 #### PlayerBrowserData
